@@ -6,7 +6,7 @@
   "author": "ZIQI HONG <hongzq78@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
+    "start": "node dist/index.js",
     "build": "babel ./app --out-dir dist"
   },
   "dependencies": {
