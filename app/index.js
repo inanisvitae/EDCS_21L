@@ -1,22 +1,11 @@
 import express from 'express';
+import compression from 'compression';
+import routes from './routes';
 
 const app = express();
+app.use(compression());
 app.use(express.static('public'));
-app.post('/add', (req, res) => {
-  res.json({ status: 'success' });
-});
-
-app.post('/get', (req, res) => {
-  res.json({ status: 'success' });
-});
-
-app.post('/delete', (req, res) => {
-  res.json({ status: 'success' });
-});
-
-app.post('/showAll', (req, res) => {
-  res.json({ status: 'success' });
-});
+app.use(routes());
 
 app.listen(3000, () => {
   console.log('Listening on port 3000!');
