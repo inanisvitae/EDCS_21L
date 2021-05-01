@@ -18,9 +18,27 @@ const isAddress = (host) => {
   return isIpv4(ip) && isPort(parseInt(port, 10));
 };
 
+const isClean = (str) => _.isString(str);
+
+const execRpc = (host, method, request) => {
+  console.log(`Executed RPC on ${host} with method: ${method}with request: ${JSON.stringify(request)}`);
+};
+
+const bufferize = (str) => {
+
+};
+
+const debufferize = (str) => {
+
+};
+
 export {
   sha1,
   isIpv4,
   isPort,
   isAddress,
+  isClean,
+  execRpc,
+  bufferize,
+  debufferize,
 };

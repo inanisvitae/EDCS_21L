@@ -2,7 +2,7 @@ const get = async (req, res) => {
   res.json({ status: 'success' });
 };
 
-const add = async (req, res) => {
+const set = async (req, res) => {
   res.json({ status: 'success' });
 };
 
@@ -14,9 +14,14 @@ const showAll = async (req, res) => {
   res.json({ status: 'success' });
 };
 
+const join = async (req, res) => {
+  res.json({ status: 'success' });
+};
+
 export default {
   get,
-  add,
+  set,
   del,
   showAll,
+  join,
 };

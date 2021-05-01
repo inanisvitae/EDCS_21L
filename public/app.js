@@ -4,7 +4,8 @@ var dict = {
   ADD: 'add',
   GET: 'get',
   DELETE: 'delete',
-  SHOW_ALL: 'showAll'
+  SHOW_ALL: 'showAll',
+  JOIN: 'join'
 };
 
 var add = function() {
@@ -38,3 +39,11 @@ var showAll = function() {
     console.log(status);
   });
 };
+
+var join = function() {
+  reqUrl = url + dict.JOIN;
+  $.post(reqUrl, function(data, status) {
+    console.log(data);
+    console.log(status);
+  });
+}
