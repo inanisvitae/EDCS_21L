@@ -1,49 +1,80 @@
 var Http = new XMLHttpRequest();
 var url = window.location.href;
 var dict = {
-  ADD: 'add',
+  SET: 'set',
   GET: 'get',
   DELETE: 'delete',
   SHOW_ALL: 'showAll',
   JOIN: 'join'
 };
 
-var add = function() {
-  reqUrl = url + dict.ADD;
-  $.post(reqUrl, function(data, status) {
-    console.log(data);
-    console.log(status);
+var set = function() {
+  reqUrl = url + dict.SET;
+
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({ key: $('#key').val(), value: $('#value').val() })
   });
 };
 
 var get = function() {
   reqUrl = url + dict.GET;
-  $.post(reqUrl, function(data, status) {
-    console.log(data);
-    console.log(status);
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({ key: $('#key').val() })
   });
 };
 
 var del = function() {
   reqUrl = url + dict.DELETE;
-  $.post(reqUrl, function(data, status) {
-    console.log(data);
-    console.log(status);
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({ key: $('#key').val() })
   });
 };
 
 var showAll = function() {
   reqUrl = url + dict.SHOW_ALL;
-  $.post(reqUrl, function(data, status) {
-    console.log(data);
-    console.log(status);
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({  })
   });
 };
 
 var join = function() {
   reqUrl = url + dict.JOIN;
-  $.post(reqUrl, function(data, status) {
-    console.log(data);
-    console.log(status);
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({ host: $('#host').val() })
   });
 }

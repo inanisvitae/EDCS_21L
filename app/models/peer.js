@@ -8,11 +8,11 @@ class Peer extends Chord {
     this.collection = new Collection();
   }
 
-  get(key) { console.log('Got key'); }
+  async get(key) { console.log('Got key'); return 1; }
 
-  set(key, value) { console.log('Set key'); }
+  async set(key, value) { console.log('Set key'); return 1; }
 
-  del(key) { console.log('Deleted key'); }
+  async del(key) { console.log('Deleted key'); return 1; }
 }
 
 export default Peer;
