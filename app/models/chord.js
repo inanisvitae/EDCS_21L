@@ -7,7 +7,6 @@ import {
   isAddress,
   sha1,
   isIpv4,
-  isPort,
   execRpc,
 } from '../utils/utils';
 

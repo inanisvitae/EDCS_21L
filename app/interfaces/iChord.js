@@ -1,4 +1,4 @@
-import { isAddress } from "../utils/utils";
+import { isAddress } from '../utils/utils';
 
 const lookup = (call, callback) => {
   console.log('Invoked Lookup');
