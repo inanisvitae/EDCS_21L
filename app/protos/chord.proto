@@ -6,6 +6,7 @@ service CHORD_PROTO {
   rpc ping   (pingRequest)   returns (pingResponse)   {}
   rpc notify (notifyRequest) returns (notifyResponse) {}
   rpc lookup (lookupRequest) returns (lookupResponse) {}
+  rpc info (infoRequest) returns (infoResponse) {}
 }
 
 message notifyRequest {
@@ -25,9 +26,18 @@ message pingResponse {
 }
 
 message lookupRequest {
-
+  bytes id = 1;
 }
 
 message lookupResponse {
+  string successor = 1;
+}
 
+message infoRequest {
+
+}
+
+message infoResponse {
+  string predecessor = 1;
+  string successor = 2;
 }

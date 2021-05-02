@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 import _ from 'underscore';
 import net from 'net';
+import * as grpc from '@grpc/grpc-js';
 
 const sha1 = (val) => crypto
   .createHash('sha1')
@@ -20,8 +21,19 @@ const isAddress = (host) => {
 
 const isClean = (str) => _.isString(str);
 
-const execRpc = (host, method, request) => {
+const execRpc = (proto, protoInterface) => (host, method, request) => {
   console.log(`Executed RPC on ${host} with method: ${method}with request: ${JSON.stringify(request)}`);
+  const client = new proto[protoInterface](host, grpc.credentials.createInsecure());
+  return new Promise((resolve, reject) => {
+    client[method](request, (error, response) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve(response);
+      }
+      client.close();
+    });
+  });
 };
 
 const bufferize = (str) => {
