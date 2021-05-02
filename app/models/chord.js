@@ -1,23 +1,44 @@
+import _ from 'underscore';
+import * as grpc from '@grpc/grpc-js';
+import * as protoLoader from '@grpc/proto-loader';
+import iChords from '../interfaces/iChord';
+
+const CHORD_PATH = `${__dirname}/chord.proto`;
+
+const packageDefinition = protoLoader.loadSync(CHORD_PATH, {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true,
+});
+const chordProto = grpc.loadPackageDefinition(packageDefinition).Chord;
+
 class Chord {
   constructor() {
-    this.address = null;
+    console.log('Initialized Chord object');
+    this.address = '0.0.0.0:50051';
     this.predecessor = null;
     this.successor = null;
+    this.start();
   }
 
   start() {
-    console.log('Starting...');
+    this.server = new grpc.Server();
+    this.server.addService(chordProto.CHORD_PROTO.service, 
+      _.mapObject(iChords, iChord => iChord.bind(this)));
+    this.server.bindAsync(this.address, grpc.ServerCredentials.createInsecure(), () => {
+      this.server.start();
+    });
   }
 
   stop() {
     console.log('Stopping...');
   }
 
-  listen(port = 0, host = '127.0.0.1') { } // Sets the ip and port
+  async lookup(id) { } // Locates the address of the key then perform operation
 
-  lookup(id) { } // Locates the address of the key then perform operation
-
-  join(host) { }
+  async join(host) { }
 
   stabilize() { }
 
@@ -25,7 +46,7 @@ class Chord {
 
   getSuccessor() { return this.successor; }
 
-  notify(host) { }
+  async notify(host) { console.log('notified...'); }
 }
 
 export default Chord;

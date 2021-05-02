@@ -2,7 +2,6 @@ import wrap from '../utils/asyncWrapper';
 import Peer from '../models/peer';
 
 const peer = new Peer();
-peer.start();
 
 const get = wrap(async (req, res) => {
   const { key } = req.body;
@@ -14,7 +13,7 @@ const get = wrap(async (req, res) => {
   }
 });
 
-const set = async (req, res) => {
+const set = wrap(async (req, res) => {
   const { key, value } = req.body;
   const result = await peer.set(key, value);
   if (result) {
@@ -22,7 +21,7 @@ const set = async (req, res) => {
   } else {
     res.status(400);
   }
-};
+});
 
 const del = wrap(async (req, res) => {
   const { key } = req.body;

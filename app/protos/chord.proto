@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package Chord;
+
+service CHORD_PROTO {
+  rpc ping   (pingRequest)   returns (pingResponse)   {}
+  rpc notify (notifyRequest) returns (notifyResponse) {}
+  rpc lookup (lookupRequest) returns (lookupResponse) {}
+}
+
+message notifyRequest {
+  string originator = 1;
+}
+
+message notifyResponse {
+
+}
+
+message pingRequest {
+  string originator = 1;
+}
+
+message pingResponse {
+  string originator = 1;
+}
+
+message lookupRequest {
+
+}
+
+message lookupResponse {
+
+}
