@@ -5,7 +5,8 @@ var dict = {
   GET: 'get',
   DELETE: 'delete',
   SHOW_ALL: 'showAll',
-  JOIN: 'join'
+  JOIN: 'join',
+  INFO: 'info'
 };
 
 var set = function() {
@@ -78,3 +79,18 @@ var join = function() {
     data: JSON.stringify({ host: $('#host').val() })
   });
 }
+
+var info = function() {
+  reqUrl = url + dict.INFO;
+  $.ajax({
+    url: reqUrl,
+    type: 'post',
+    dataType: 'json',
+    contentType: 'application/json',
+    success: function (data) {
+      console.log(data);
+    },
+    data: JSON.stringify({ host: $('#host').val() })
+  });
+}
+

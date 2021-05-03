@@ -28,9 +28,11 @@ class Chord {
     console.log(`IP is ${ip.address()}`);
     this.localhost = '0.0.0.0:50051';
     this.address = `${ip.address()}:50051`;
+    this.id = sha1(this.address);
     this.predecessor = null;
     this.successor = null;
     this.isJoined = false;
+    this.execChordRpc = execChordRpc;
     this.start();
   }
 
@@ -52,19 +54,21 @@ class Chord {
   }
 
   async lookup(id) {
+    // Locates the address of the key then perform operation
     if (!Buffer.isBuffer(id)) {
       throw new Error('Id must be a buffer');
     }
     const response = await execChordRpc(this.address, 'lookup', { id });
     return response.successor;
-  } // Locates the address of the key then perform operation
+  }
 
   async join(host) {
+    console.log('joining...')
     if (this.isJoined) { return false; }
 
-    if (!isIpv4) { return new Error('Host is not an IPv4 address.'); }
+    if (!isIpv4(host)) { throw new Error('Host is not an IPv4 address.'); }
 
-    if (host === this.address) { return new Error('Cannot join to the peer'); }
+    if (host === this.address) { throw new Error('Cannot join to the peer'); }
 
     // Should stop maintenance
     const lookupResponse = await execChordRpc(host, 'lookup', {
@@ -88,11 +92,26 @@ class Chord {
 
   stabilize() { }
 
-  getPredecessor() { return this.predecessor; }
-
-  getSuccessor() { return this.successor; }
-
   async notify(host) { console.log('notified...'); }
+
+  async info(host) {
+    if (!isAddress(host)) {
+      throw new Error('Host is not an IPv4 address.');
+    }
+
+    if (host === this.address) {
+      const response = {
+        predecessor: this.predecessor,
+        address: host,
+        successor: this.successor,
+      };
+      return response;
+    }
+
+    const response = await this.execChordRpc(host, 'info', { });
+    response.address = host;
+    return response;
+  }
 }
 
 export default Chord;

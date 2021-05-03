@@ -6,4 +6,5 @@ export default (router) => {
   router.post('/delete', operationController.del);
   router.post('/showAll', operationController.showAll);
   router.post('/join', operationController.join);
+  router.post('/info', operationController.info);
 };

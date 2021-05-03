@@ -9,7 +9,7 @@ const get = wrap(async (req, res) => {
   if (result) {
     res.json({ status: 'success' });
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -19,7 +19,7 @@ const set = wrap(async (req, res) => {
   if (result) {
     res.json({ status: 'success' });
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -29,7 +29,7 @@ const del = wrap(async (req, res) => {
   if (result) {
     res.json({ status: 'success' });
   } else {
-    res.status(400);
+    res.sendStatus(400);
   }
 });
 
@@ -39,11 +39,28 @@ const showAll = wrap(async (req, res) => {
 
 const join = wrap(async (req, res) => {
   const { host } = req.body;
-  const result = await peer.join(host);
-  if (result) {
-    res.json({ status: 'success' });
-  } else {
-    res.status(400);
+  try {
+    const result = await peer.join(host);
+    if (result) {
+      return res.json({ status: 'success' });
+    }
+    return res.sendStatus(400);
+  } catch (e) {
+    console.log(e);
+    return res.sendStatus(400);
+  }
+});
+
+const info = wrap(async (req, res) => {
+  const { host } = req.body;
+  try {
+    const result = await peer.info(host);
+    if (result) {
+      res.json({ status: 'success', result });
+    }
+    return res.sendStatus(400);
+  } catch (e) {
+    return res.sendStatus(400);
   }
 });
 
@@ -53,4 +70,5 @@ export default {
   del,
   showAll,
   join,
+  info,
 };

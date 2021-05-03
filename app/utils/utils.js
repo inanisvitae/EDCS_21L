@@ -36,12 +36,11 @@ const execRpc = (proto, protoInterface) => (host, method, request) => {
   });
 };
 
-const bufferize = (str) => {
-
-};
-
-const debufferize = (str) => {
-
+const isLocatedBetween = (lower, curr, upper) => {
+  if (lower.compare(upper) < 0) {
+    return lower.compare(curr) < 0 && curr.compare(upper) < 0;
+  }
+  return lower.compare(curr) < 0 || curr.compare(upper) < 0;
 };
 
 export {
@@ -51,6 +50,5 @@ export {
   isAddress,
   isClean,
   execRpc,
-  bufferize,
-  debufferize,
+  isLocatedBetween,
 };
