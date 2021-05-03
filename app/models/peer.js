@@ -4,6 +4,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import Chord from './chord';
 import iPeers from '../interfaces/iPeer';
 import Collection from './collection';
+import { execRpc, sha1 } from '../utils/utils';
 
 const PEER_PATH = `${__dirname}/peer.proto`;
 
@@ -15,6 +16,7 @@ const packageDefinition = protoLoader.loadSync(PEER_PATH, {
   oneofs: true,
 });
 const peerProto = grpc.loadPackageDefinition(packageDefinition).Peer;
+const execPeerRpc = execRpc(peerProto, 'PEER_PROTO');
 
 class Peer extends Chord {
   constructor() {
@@ -23,9 +25,20 @@ class Peer extends Chord {
     this.collection = new Collection();
     this.server.addService(peerProto.PEER_PROTO.service,
       _.mapObject(iPeers, (iPeer) => iPeer.bind(this)));
+    this.execPeerRpc = execPeerRpc;
   }
 
-  async get(key) { console.log('Got key'); return 1; }
+  async get(key) {
+    const id = sha1(key);
+    try {
+      const host = await this.lookup(id);
+      const response = await this.execPeerRpc(host, 'get', { key });
+      return response.value;
+    } catch (e) {
+      console.log('Unable to get key due to error');
+      throw e;
+    }
+  }
 
   async set(key, value) { console.log('Set key'); return 1; }
 
