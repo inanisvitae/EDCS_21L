@@ -7,30 +7,27 @@ const get = wrap(async (req, res) => {
   const { key } = req.body;
   const result = await peer.get(key);
   if (result) {
-    res.json({ status: 'success' });
-  } else {
-    res.sendStatus(400);
+    return res.json({ status: 'success' });
   }
+  return res.sendStatus(400);
 });
 
 const set = wrap(async (req, res) => {
   const { key, value } = req.body;
   const result = await peer.set(key, value);
   if (result) {
-    res.json({ status: 'success' });
-  } else {
-    res.sendStatus(400);
+    return res.json({ status: 'success' });
   }
+  return res.sendStatus(400);
 });
 
 const del = wrap(async (req, res) => {
   const { key } = req.body;
   const result = await peer.set(key);
   if (result) {
-    res.json({ status: 'success' });
-  } else {
-    res.sendStatus(400);
+    return res.json({ status: 'success' });
   }
+  return res.sendStatus(400);
 });
 
 const showAll = wrap(async (req, res) => {
@@ -56,7 +53,7 @@ const info = wrap(async (req, res) => {
   try {
     const result = await peer.info(host);
     if (result) {
-      res.json({ status: 'success', result });
+      return res.json({ status: 'success', result });
     }
     return res.sendStatus(400);
   } catch (e) {

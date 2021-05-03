@@ -6,7 +6,6 @@ import iChords from '../interfaces/iChord';
 import {
   isAddress,
   sha1,
-  isIpv4,
   execRpc,
 } from '../utils/utils';
 
@@ -66,7 +65,7 @@ class Chord {
     console.log('joining...');
     if (this.isJoined) { return false; }
 
-    if (!isIpv4(host)) { throw new Error('Host is not an IPv4 address.'); }
+    if (!isAddress(host)) { throw new Error('Host is not an IPv4 address.'); }
 
     if (host === this.address) { throw new Error('Cannot join to the peer'); }
 
