@@ -1,4 +1,9 @@
-import { isAddress, isLocatedBetween, sha1 } from '../utils/utils';
+import {
+  isAddress,
+  isLocatedBetween,
+  sha1,
+  fromStringToDecimal,
+} from '../utils/utils';
 
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
@@ -10,7 +15,11 @@ async function lookup(call, callback) {
 
   const successorShaId = sha1(this.successor);
 
-  if (isLocatedBetween(this.id, id, successorShaId)
+  if (isLocatedBetween(
+    fromStringToDecimal(this.id),
+    fromStringToDecimal(id),
+    fromStringToDecimal(successorShaId),
+  )
   || id.compare(successorShaId) === 0) {
     await this.execChordRpc(this.successor, 'ping', { originator: this.address });
     return callback(null, { successor: this.successor });
@@ -34,7 +43,11 @@ async function notify(call, callback) {
 
   if (!isAddress(this.predecessor)
   // Arrange linked list in ascending order clockwise
-  || isLocatedBetween(sha1(this.predecessor), sha1(originator), this.id)) {
+  || isLocatedBetween(
+    fromStringToDecimal(sha1(this.predecessor)),
+    fromStringToDecimal(sha1(originator)),
+    fromStringToDecimal(this.id),
+  )) {
     this.predecessor = originator;
   } else {
     try {

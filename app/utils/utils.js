@@ -6,7 +6,8 @@ import * as grpc from '@grpc/grpc-js';
 const sha1 = (val) => crypto
   .createHash('sha1')
   .update(val)
-  .digest();
+  .digest()
+  .toString('hex');
 
 const isIpv4 = (ip) => net.isIPv4(ip);
 
@@ -43,6 +44,8 @@ const isLocatedBetween = (lower, curr, upper) => {
   return lower.compare(curr) < 0 || curr.compare(upper) < 0;
 };
 
+const fromStringToDecimal = (hexStr) => parseInt(`0x${hexStr}`, 16);
+
 export {
   sha1,
   isIpv4,
@@ -51,4 +54,5 @@ export {
   isClean,
   execRpc,
   isLocatedBetween,
+  fromStringToDecimal,
 };
