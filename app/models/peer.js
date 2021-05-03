@@ -30,6 +30,8 @@ class Peer extends Chord {
   async set(key, value) { console.log('Set key'); return 1; }
 
   async del(key) { console.log('Deleted key'); return 1; }
+
+  async partition(host) { console.log('Partitioned keys'); return 1; }
 }
 
 export default Peer;
