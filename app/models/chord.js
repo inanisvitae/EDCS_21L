@@ -57,7 +57,7 @@ class Chord {
     if (!Buffer.isBuffer(id)) {
       throw new Error('Id must be a buffer');
     }
-    const response = await execChordRpc(this.address, 'lookup', { id });
+    const response = await execChordRpc(this.address, 'lookup', { name: id });
     return response.successor;
   }
 
@@ -71,7 +71,7 @@ class Chord {
 
     // Should stop maintenance
     const lookupResponse = await execChordRpc(host, 'lookup', {
-      id: sha1(this.address),
+      name: sha1(this.address),
     });
     const newSuccessor = lookupResponse.successor;
     if (!isAddress(newSuccessor)) {

@@ -26,7 +26,7 @@ async function lookup(call, callback) {
   }
   // Recursively get the correct successor of key
   try {
-    const response = await this.execChordRpc(this.successor, 'lookup', { id });
+    const response = await this.execChordRpc(this.successor, 'lookup', { name: id });
     return callback(null, response);
   } catch (e) {
     console.log('The successor is no longer active');
