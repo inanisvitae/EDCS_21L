@@ -38,10 +38,11 @@ const execRpc = (proto, protoInterface) => (host, method, request) => {
 };
 
 const isLocatedBetween = (lower, curr, upper) => {
-  if (lower.compare(upper) < 0) {
-    return lower.compare(curr) < 0 && curr.compare(upper) < 0;
+  // Keys will never be the same
+  if (lower < upper) {
+    return lower < curr && curr < upper;
   }
-  return lower.compare(curr) < 0 || curr.compare(upper) < 0;
+  return lower < curr || curr < upper;
 };
 
 const fromStringToDecimal = (hexStr) => parseInt(`0x${hexStr}`, 16);

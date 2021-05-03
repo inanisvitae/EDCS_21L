@@ -8,6 +8,9 @@ import {
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { name: id } = call.request;
+  if (!this.successor) {
+    console.log('This is a singleton node');
+  }
   const successorShaId = sha1(this.successor);
 
   if (isLocatedBetween(
