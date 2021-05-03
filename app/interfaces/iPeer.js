@@ -10,7 +10,7 @@ function get(call, callback) {
   if (!isLocatedBetween(fromStringToDecimal(predecessorId),
     fromStringToDecimal(sha1(key)),
     fromStringToDecimal(this.id))
-  && sha1(key).compare(this.id) !== 0) {
+  && sha1(key) !== this.id) {
     return callback(new Error('The key is not on this node'));
   }
   if (!this.collection.has(key)) {

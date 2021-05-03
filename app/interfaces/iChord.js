@@ -7,12 +7,7 @@ import {
 
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
-  const { id } = call.request;
-
-  if (!Buffer.isBuffer(id)) {
-    return callback(new Error());
-  }
-
+  const { name: id } = call.request;
   const successorShaId = sha1(this.successor);
 
   if (isLocatedBetween(
@@ -20,7 +15,7 @@ async function lookup(call, callback) {
     fromStringToDecimal(id),
     fromStringToDecimal(successorShaId),
   )
-  || id.compare(successorShaId) === 0) {
+  || id === successorShaId) {
     await this.execChordRpc(this.successor, 'ping', { originator: this.address });
     return callback(null, { successor: this.successor });
   }

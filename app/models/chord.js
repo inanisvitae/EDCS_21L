@@ -54,9 +54,6 @@ class Chord {
 
   async lookup(id) {
     // Locates the address of the key then perform operation
-    if (!Buffer.isBuffer(id)) {
-      throw new Error('Id must be a buffer');
-    }
     const response = await execChordRpc(this.address, 'lookup', { name: id });
     return response.successor;
   }
@@ -73,6 +70,7 @@ class Chord {
     const lookupResponse = await execChordRpc(host, 'lookup', {
       name: sha1(this.address),
     });
+    console.log('finished lookup..');
     const newSuccessor = lookupResponse.successor;
     if (!isAddress(newSuccessor)) {
       throw new Error('Failed to find successor');
