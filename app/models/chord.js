@@ -40,7 +40,7 @@ class Chord {
     this.server = new grpc.Server();
     this.server.addService(chordProto.CHORD_PROTO.service,
       _.mapObject(iChords, (iChord) => iChord.bind(this)));
-    this.server.bindAsync(this.address, grpc.ServerCredentials.createInsecure(), () => {
+    this.server.bindAsync(this.localhost, grpc.ServerCredentials.createInsecure(), () => {
       this.server.start();
     });
 
@@ -63,7 +63,7 @@ class Chord {
   }
 
   async join(host) {
-    console.log('joining...')
+    console.log('joining...');
     if (this.isJoined) { return false; }
 
     if (!isIpv4(host)) { throw new Error('Host is not an IPv4 address.'); }
@@ -98,7 +98,6 @@ class Chord {
     if (!isAddress(host)) {
       throw new Error('Host is not an IPv4 address.');
     }
-
     if (host === this.address) {
       const response = {
         predecessor: this.predecessor,
@@ -107,10 +106,14 @@ class Chord {
       };
       return response;
     }
-
-    const response = await this.execChordRpc(host, 'info', { });
-    response.address = host;
-    return response;
+    try {
+      const response = this.execChordRpc(host, 'info', { });
+      response.address = host;
+      return response;
+    } catch (e) {
+      console.log(e);
+    }
+    return {};
   }
 }
 

@@ -1,14 +1,14 @@
-const get = (call, callback) => {
+function get(call, callback) {
 
-};
+}
 
-const set = (call, callback) => {
+function set(call, callback) {
 
-};
+}
 
-const del = (call, callback) => {
+function del(call, callback) {
 
-};
+}
 
 export {
   get,

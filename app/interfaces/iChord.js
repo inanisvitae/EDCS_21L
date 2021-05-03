@@ -1,6 +1,6 @@
 import { isAddress, isLocatedBetween, sha1 } from '../utils/utils';
 
-const lookup = async (call, callback) => {
+async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { id } = call.request;
 
@@ -22,9 +22,10 @@ const lookup = async (call, callback) => {
   } catch (e) {
     console.log('The successor is no longer active');
   }
-};
+  return callback(null, new Error());
+}
 
-const notify = async (call, callback) => {
+async function notify(call, callback) {
   console.log(`Invoked notify with request ${JSON.stringify(call.request)}`);
   const { originator } = call.request;
   if (!isAddress(originator)) {
@@ -37,7 +38,7 @@ const notify = async (call, callback) => {
     this.predecessor = originator;
   } else {
     try {
-      this.execChordRpc(this.predecessor, 'ping', {
+      await this.execChordRpc(this.predecessor, 'ping', {
         originator: this.address,
       });
       console.log('Successfully invoked ping');
@@ -48,9 +49,9 @@ const notify = async (call, callback) => {
   }
 
   return callback(null);
-};
+}
 
-const ping = (call, callback) => {
+function ping(call, callback) {
   console.log(`Invoked ping with request ${JSON.stringify(call.request)}`);
   const { originator } = call.request;
 
@@ -59,15 +60,15 @@ const ping = (call, callback) => {
   }
 
   return callback(null, call.request);
-};
+}
 
-const info = (call, callback) => {
+function info(call, callback) {
   console.log(`Invoked info with request ${JSON.stringify(call.request)}`);
   return callback(null, {
     predecessor: this.predecessor,
     successor: this.successor,
   });
-};
+}
 
 export default {
   lookup,
