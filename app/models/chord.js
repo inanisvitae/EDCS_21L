@@ -108,8 +108,9 @@ class Chord {
       return response;
     }
     try {
-      const response = this.execChordRpc(host, 'info', { });
+      const response = await this.execChordRpc(host, 'info', { });
       response.address = host;
+      console.log(`Info response is: ${JSON.stringify(response)}`);
       return response;
     } catch (e) {
       console.log(e);
