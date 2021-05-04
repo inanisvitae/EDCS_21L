@@ -47,6 +47,10 @@ async function notify(call, callback) {
     fromStringToDecimal(this.id),
   )) {
     this.predecessor = originator;
+    if (this.successor === this.address) {
+      // Means that this node was a singleton before the join
+      this.successor = originator;
+    }
   } else {
     try {
       await this.execChordRpc(this.predecessor, 'ping', {

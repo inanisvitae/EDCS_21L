@@ -73,6 +73,7 @@ class Chord {
       name: sha1(this.address),
     });
     console.log('finished lookup..');
+    console.log(`Lookup response is: ${JSON.stringify(lookupResponse)}`);
     const newSuccessor = lookupResponse.successor;
     if (!isAddress(newSuccessor)) {
       throw new Error('Failed to find successor');
