@@ -33,6 +33,8 @@ class Chord {
     this.isJoined = false;
     this.execChordRpc = execChordRpc;
     this.start();
+
+    // Try to initialize the server with ip address
   }
 
   async start() {
