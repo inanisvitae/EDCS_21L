@@ -16,17 +16,7 @@
     "crypto": "^1.0.1",
     "express": "^4.17.1",
     "ip": "^1.1.5",
-    "underscore": "^1.13.1"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      "@babel/plugin-transform-runtime"
-    ]
-  },
-  "devDependencies": {
+    "underscore": "^1.13.1",
     "@babel/cli": "^7.13.16",
     "@babel/core": "^7.13.16",
     "@babel/plugin-transform-runtime": "^7.13.15",
@@ -38,5 +28,13 @@
     "mocha": "^8.3.2",
     "nodemon": "^2.0.7",
     "rimraf": "^3.0.2"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/plugin-transform-runtime"
+    ]
   }
 }
