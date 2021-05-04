@@ -88,6 +88,16 @@ class Chord {
 
     // added to linked list
     this.predecessor = newPredecessor;
+
+    // Notifies the successor that a new node has joined the network
+    try {
+      await execChordRpc(this.successor, 'notify', {
+        originator: this.address,
+      });
+    } catch (e) {
+      console.log(`Notify error: ${JSON.stringify(e)}`);
+      return false;
+    }
     return true;
   }
 
