@@ -77,7 +77,9 @@ class Chord {
     if (!isAddress(newSuccessor)) {
       throw new Error('Failed to find successor');
     }
+    this.successor = newSuccessor;
     const infoResponse = await execChordRpc(newSuccessor, 'info', { });
+    console.log(`Response from info is: ${JSON.stringify(infoResponse)}`);
     // set predecessor address
     const newPredecessor = infoResponse.predecessor;
     if (!isAddress(newPredecessor)) {
