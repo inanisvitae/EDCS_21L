@@ -28,8 +28,8 @@ class Chord {
     this.localhost = '0.0.0.0:50051';
     this.address = `${ip.address()}:50051`;
     this.id = sha1(this.address);
-    this.predecessor = null;
-    this.successor = null;
+    this.predecessor = this.address;
+    this.successor = this.address;
     this.isJoined = false;
     this.execChordRpc = execChordRpc;
     this.start();
