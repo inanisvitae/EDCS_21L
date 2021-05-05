@@ -91,24 +91,30 @@ class Chord {
       predecessor: newPredecessor,
       successor: newSuccessor,
     } = lookupResponse;
-    if (!isAddress(newSuccessor) && !isAddress(newPredecessor)) {
+    const newSuccessorFlag = isAddress(newSuccessor);
+    const newPredecessorFlag = isAddress(newPredecessor);
+    if (!newSuccessorFlag && !newPredecessorFlag) {
       throw new Error('Failed to find any joinable node');
     }
-    if (isAddress(newSuccessor)) {
+    if (newSuccessorFlag) {
       this.successor = newSuccessor;
     }
-    if (isAddress(newPredecessor)) {
+    if (newPredecessorFlag) {
       this.predecessor = newPredecessor;
     }
     try {
-      await this.execChordRpc(this.predecessor, 'notify', {
-        originator: this.address,
-        role: 'successor',
-      });
-      await this.execChordRpc(this.successor, 'notify', {
-        originator: this.address,
-        role: 'predecessor',
-      });
+      if (newSuccessorFlag) {
+        await this.execChordRpc(this.predecessor, 'notify', {
+          originator: this.address,
+          role: 'successor',
+        });
+      }
+      if (newPredecessorFlag) {
+        await this.execChordRpc(this.successor, 'notify', {
+          originator: this.address,
+          role: 'predecessor',
+        });
+      }
     } catch (e) {
       console.log(`Notify error: ${JSON.stringify(e)}`);
       return false;
