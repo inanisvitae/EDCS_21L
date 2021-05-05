@@ -96,7 +96,7 @@ class Peer extends Chord {
 
   async partition(host) {
     console.log(`Partitioned keys on ${host}`);
-    const result = JSON.stringify((await this.execPeerRpc(host, 'partition', { originator: this.address })) || '[]');
+    const result = JSON.parse((await this.execPeerRpc(host, 'partition', { originator: this.address })) || '[]');
     result.forEach(([key, value]) => {
       // TODO: Should test whether the key pair already exists
       this.collection.set(key, value);
