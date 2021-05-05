@@ -93,7 +93,6 @@ class Chord {
     } = lookupResponse;
     const newSuccessorFlag = isAddress(newSuccessor);
     const newPredecessorFlag = isAddress(newPredecessor);
-    console.log(newSuccessor, newPredecessor, newSuccessorFlag, newPredecessorFlag);
 
     if (!newSuccessorFlag && !newPredecessorFlag) {
       throw new Error('Failed to find any joinable node');
