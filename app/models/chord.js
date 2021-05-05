@@ -57,7 +57,20 @@ class Chord {
   async lookup(id) {
     // Locates the address of the key then perform operation
     const response = await this.execChordRpc(this.address, 'lookup', { name: id });
-    return response.successor;
+    const {
+      successor,
+      predecessor,
+    } = response;
+    if (successor && predecessor) {
+      return successor;
+    }
+    if (successor) {
+      return successor;
+    }
+    if (predecessor) {
+      return predecessor;
+    }
+    return successor;
   }
 
   async join(host) {
