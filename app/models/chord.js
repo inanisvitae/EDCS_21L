@@ -85,7 +85,6 @@ class Chord {
     const lookupResponse = await this.execChordRpc(host, 'lookup', {
       name: sha1(this.address),
     });
-    console.log('finished lookup..');
     console.log(`Lookup response is: ${JSON.stringify(lookupResponse)}`);
     const {
       predecessor: newPredecessor,
