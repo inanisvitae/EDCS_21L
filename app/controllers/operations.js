@@ -7,7 +7,7 @@ const get = wrap(async (req, res) => {
   const { key } = req.body;
   const result = await peer.get(key);
   if (result) {
-    return res.json({ status: 'success' });
+    return res.json({ status: 'success', result });
   }
   return res.sendStatus(400);
 });
@@ -31,7 +31,7 @@ const del = wrap(async (req, res) => {
 });
 
 const showAll = wrap(async (req, res) => {
-  const result = peer.showAll();
+  const result = await peer.showAll();
   if (result) {
     return res.json({ status: 'success', result });
   }

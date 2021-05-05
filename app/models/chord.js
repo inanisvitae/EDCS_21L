@@ -37,7 +37,22 @@ class Chord {
     this.isJoined = false;
     this.execChordRpc = execChordRpc;
     this.start();
-
+    this.interval = 2000;
+    this.maintenance = (() => {
+      let stopTime;
+      return {
+        start: () => {
+          stopTime = setInterval(() => {
+            this.stabilize();
+          }, this.interval);
+        },
+        stop: () => {
+          clearInterval(stopTime);
+          stopTime = null;
+        },
+      };
+    })();
+    this.maintenance.start();
     // Try to initialize the server with ip address
   }
 
@@ -55,6 +70,7 @@ class Chord {
 
   stop() {
     console.log('Stopping...');
+    this.maintenance.stop();
     this.server.forceShutdown();
   }
 
@@ -127,20 +143,31 @@ class Chord {
     return true;
   }
 
+  testIsJoined() {
+    return this.predecessor === HEAD && this.successor === TAIL;
+  }
+
   async stabilize() {
+    console.log('Make sure it starts...');
     // Make sure both successor and predecessor are valid and alive
-    try {
-      await this.execChordRpc(this.predecessor, 'ping', { originator: this.address });
-    } catch (e) {
-      console.log(`Tried pinging ${this.predecessor} failed, so set predecessor to HEAD`);
-      this.predecessor = HEAD;
+    if (this.predecessor !== HEAD) {
+      try {
+        await this.execChordRpc(this.predecessor, 'ping', { originator: this.address });
+      } catch (e) {
+        console.log(`Tried pinging ${this.predecessor} failed, so set predecessor to HEAD`);
+        this.predecessor = HEAD;
+      }
     }
-    try {
-      await this.execChordRpc(this.successor, 'ping', { originator: this.address });
-    } catch (e) {
-      console.log(`Tried pinging ${this.successor} failed, so set predecessor to TAIL`);
-      this.successor = TAIL;
+    if (this.successor !== TAIL) {
+      try {
+        await this.execChordRpc(this.successor, 'ping', { originator: this.address });
+      } catch (e) {
+        console.log(`Tried pinging ${this.successor} failed, so set predecessor to TAIL`);
+        this.successor = TAIL;
+      }
     }
+    // Updates is joined status
+    this.isJoined = this.testIsJoined();
   }
 
   async notify(host) { console.log('notified...'); }

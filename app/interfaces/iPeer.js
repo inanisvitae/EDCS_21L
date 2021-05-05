@@ -21,9 +21,7 @@ function del(call, callback) {
   return callback(null, { });
 }
 
-function partition(call, callback) {
-
-}
+function partition(call, callback) { }
 
 async function dump(call, callback) {
   let entries = JSON.parse(call.request.entries);
