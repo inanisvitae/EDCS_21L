@@ -6,6 +6,7 @@ service PEER_PROTO {
   rpc get       (getRequest)      returns (getResponse)        {}
   rpc set       (setRequest)      returns (setResponse)        {}
   rpc del       (delRequest)      returns (delResponse)        {}
+  rpc dump      (dumpRequest)     returns (dumpResponse)       {}
 }
 
 message getRequest {
@@ -31,4 +32,12 @@ message delRequest {
 
 message delResponse {
 
+}
+
+message dumpRequest {
+  string entries = 1;
+}
+
+message dumpResponse {
+  string entries = 1;
 }

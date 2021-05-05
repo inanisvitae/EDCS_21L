@@ -1,3 +1,6 @@
+import _ from 'underscore';
+import { HEAD, TAIL } from '../constants';
+
 function get(call, callback) {
   const { key } = call.request;
   if (!this.collection.has(key)) {
@@ -22,9 +25,26 @@ function partition(call, callback) {
 
 }
 
+async function dump(call, callback) {
+  let entries = JSON.parse(call.request.entries);
+  if (!(this.address in entries)) {
+    entries[this.address] = _.pairs(this.collection.data);
+  }
+  if (this.predecessor !== HEAD && !(this.predecessor in entries)) {
+    const result = JSON.parse(await this.execPeerRpc(this.predecessor, 'dump', { entries: JSON.stringify(entries) }));
+    entries = { ...result, ...entries };
+  }
+  if (this.successor !== TAIL && !(this.successor in entries)) {
+    const result = JSON.parse(await this.execPeerRpc(this.successor, 'dump', { entries: JSON.stringify(entries) }));
+    entries = { ...result, ...entries };
+  }
+  return callback(null, { entries: JSON.stringify(entries) });
+}
+
 export default {
   get,
   set,
   del,
   partition,
+  dump,
 };

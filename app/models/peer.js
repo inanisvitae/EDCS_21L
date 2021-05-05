@@ -76,10 +76,16 @@ class Peer extends Chord {
 
   async partition(host) { console.log('Partitioned keys'); return 1; }
 
-  showAll() {
+  async showAll() {
     // Right now shows only the data on the node
     console.log(_.pairs(this.collection.data));
-    return _.pairs(this.collection.data);
+
+    const resultSuccessor = await this.execPeerRpc(this.successor, 'dump', JSON.stringify({ entries: '{}' }));
+    const resultPredecessor = await this.execPeerRpc(this.predecessor, 'dump', JSON.stringify({ entries: resultSuccessor }));
+    const result = JSON.parse(resultPredecessor);
+    result[this.address] = _.pairs(this.collection.data);
+    console.log(`Show all result is: ${result}`);
+    return result;
   }
 }
 
