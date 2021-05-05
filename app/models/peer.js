@@ -40,9 +40,29 @@ class Peer extends Chord {
     }
   }
 
-  async set(key, value) { console.log('Set key'); return 1; }
+  async set(key, value) {
+    const id = sha1(key);
+    try {
+      const host = await this.lookup(id);
+      const response = await this.execPeerRpc(host, 'set', { key, value });
+      return response.value;
+    } catch (e) {
+      console.log('Unable to set key due to error');
+      throw e;
+    }
+  }
 
-  async del(key) { console.log('Deleted key'); return 1; }
+  async del(key) {
+    const id = sha1(key);
+    try {
+      const host = await this.lookup(id);
+      const response = await this.execPeerRpc(host, 'del', { key });
+      return response.value;
+    } catch (e) {
+      console.log('Unable to delete key due to error');
+      throw e;
+    }
+  }
 
   async partition(host) { console.log('Partitioned keys'); return 1; }
 }
