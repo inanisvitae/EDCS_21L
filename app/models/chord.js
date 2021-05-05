@@ -93,6 +93,8 @@ class Chord {
     } = lookupResponse;
     const newSuccessorFlag = isAddress(newSuccessor);
     const newPredecessorFlag = isAddress(newPredecessor);
+    console.log(newSuccessor, newPredecessor, newSuccessorFlag, newPredecessorFlag);
+
     if (!newSuccessorFlag && !newPredecessorFlag) {
       throw new Error('Failed to find any joinable node');
     }
@@ -103,13 +105,13 @@ class Chord {
       this.predecessor = newPredecessor;
     }
     try {
-      if (newSuccessorFlag) {
+      if (newPredecessorFlag) {
         await this.execChordRpc(this.predecessor, 'notify', {
           originator: this.address,
           role: 'successor',
         });
       }
-      if (newPredecessorFlag) {
+      if (newSuccessorFlag) {
         await this.execChordRpc(this.successor, 'notify', {
           originator: this.address,
           role: 'predecessor',
