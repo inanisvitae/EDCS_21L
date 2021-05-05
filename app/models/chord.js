@@ -130,7 +130,7 @@ class Chord {
   }
 
   testIsJoined() {
-    return this.predecessor === HEAD && this.successor === TAIL;
+    return this.predecessor !== HEAD || this.successor !== TAIL;
   }
 
   async stabilize() {
