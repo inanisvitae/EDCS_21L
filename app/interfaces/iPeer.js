@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { HEAD, TAIL } from '../constants';
+import { sha1, fromStringToDecimal } from '../utils/utils';
 
 function get(call, callback) {
   const { key } = call.request;
@@ -21,7 +22,36 @@ function del(call, callback) {
   return callback(null, { });
 }
 
-function partition(call, callback) { }
+function partition(call, callback) {
+  const { originator } = call.request;
+  const entries = [];
+  _.keys(this.collection.data).forEach((key) => {
+    const keyId = fromStringToDecimal(sha1(key));
+    // Partitions data for request from predecessor
+    if (originator === this.predecessor
+      && keyId > fromStringToDecimal(this.predecessor)
+      && keyId < fromStringToDecimal(this.id)) {
+      entries.push({
+        key,
+        value: this.collection[key],
+      });
+
+      this.collection.del(key);
+    }
+    // Partitions data for request from successor
+    if (originator === this.successor
+      && keyId < fromStringToDecimal(this.successor)
+      && keyId > fromStringToDecimal(this.id)) {
+      entries.push({
+        key,
+        value: this.collection[key],
+      });
+
+      this.collection.del(key);
+    }
+  });
+  return callback(null, { entries: JSON.stringify(entries) });
+}
 
 async function dump(call, callback) {
   let entries = JSON.parse(call.request.entries);

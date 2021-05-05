@@ -38,21 +38,7 @@ class Chord {
     this.execChordRpc = execChordRpc;
     this.start();
     this.interval = 2000;
-    this.maintenance = (() => {
-      let stopTime;
-      return {
-        start: () => {
-          stopTime = setInterval(() => {
-            this.stabilize();
-          }, this.interval);
-        },
-        stop: () => {
-          clearInterval(stopTime);
-          stopTime = null;
-        },
-      };
-    })();
-    this.maintenance.start();
+
     // Try to initialize the server with ip address
   }
 

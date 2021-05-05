@@ -44,9 +44,9 @@ message dumpResponse {
 }
 
 message partitionRequest {
-
+  string originator = 1;
 }
 
 message partitionResponse {
-
+  string entries = 1;
 }

@@ -27,6 +27,25 @@ class Peer extends Chord {
     this.server.addService(peerProto.PEER_PROTO.service,
       _.mapObject(iPeers, (iPeer) => iPeer.bind(this)));
     this.execPeerRpc = execPeerRpc;
+    this.maintenance = (() => {
+      let stopTime;
+      return {
+        start: () => {
+          stopTime = setInterval(() => {
+            this.stabilize();
+            if (this.isJoined) {
+              this.partition(this.predecessor);
+              this.partition(this.successor);
+            }
+          }, this.interval);
+        },
+        stop: () => {
+          clearInterval(stopTime);
+          stopTime = null;
+        },
+      };
+    })();
+    this.maintenance.start();
   }
 
   async get(key) {
@@ -75,7 +94,15 @@ class Peer extends Chord {
     }
   }
 
-  async partition(host) { console.log('Partitioned keys'); return 1; }
+  async partition(host) {
+    console.log(`Partitioned keys on ${host}`);
+    const result = JSON.stringify((await this.execPeerRpc(host, 'partition', { originator: this.address })) || '[]');
+    result.forEach(([key, value]) => {
+      // TODO: Should test whether the key pair already exists
+      this.collection.set(key, value);
+    });
+    return true;
+  }
 
   async showAll() {
     // Right now shows only the data on the node
