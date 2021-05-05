@@ -21,7 +21,6 @@ async function lookup(call, callback) {
       return callback(null, { successor: this.address });
     }
     if (fromStringToDecimal(sha1(this.predecessor)) >= fromStringToDecimal(id)) {
-      console.log('is true');
       try {
         const response = await this.execChordRpc(this.predecessor, 'lookup', { name: id });
         return callback(null, response);
