@@ -4,7 +4,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import Chord from './chord';
 import iPeers from '../interfaces/iPeer';
 import Collection from './collection';
-import { execRpc, sha1 } from '../utils/utils';
+import { execRpc, isAddress, sha1 } from '../utils/utils';
 import { HEAD, TAIL } from '../constants';
 
 const PEER_PATH = `${__dirname}/peer.proto`;
@@ -95,6 +95,7 @@ class Peer extends Chord {
   }
 
   async partition(host) {
+    if (!isAddress(host)) { return false; }
     console.log(`Partitioned keys on ${host}`);
     const result = JSON.parse((await this.execPeerRpc(host, 'partition', { originator: this.address })) || '[]');
     result.forEach(([key, value]) => {
