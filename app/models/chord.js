@@ -45,7 +45,7 @@ class Chord {
       this.server.start();
     });
 
-    // const resp = await execChordRpc('0.0.0.0:50051', 'lookup', { name: 'world' });
+    // const resp = await this.execChordRpc('0.0.0.0:50051', 'lookup', { name: 'world' });
     // console.log(resp, 'here');
   }
 
@@ -56,7 +56,7 @@ class Chord {
 
   async lookup(id) {
     // Locates the address of the key then perform operation
-    const response = await execChordRpc(this.address, 'lookup', { name: id });
+    const response = await this.execChordRpc(this.address, 'lookup', { name: id });
     return response.successor;
   }
 
@@ -69,7 +69,7 @@ class Chord {
     if (host === this.address) { throw new Error('Cannot join to the peer'); }
 
     // Should stop maintenance
-    const lookupResponse = await execChordRpc(host, 'lookup', {
+    const lookupResponse = await this.execChordRpc(host, 'lookup', {
       name: sha1(this.address),
     });
     console.log('finished lookup..');
@@ -88,11 +88,11 @@ class Chord {
       this.predecessor = newPredecessor;
     }
     try {
-      await execChordRpc(this.predecessor, 'notify', {
+      await this.execChordRpc(this.predecessor, 'notify', {
         originator: this.address,
         role: 'successor',
       });
-      await execChordRpc(this.successor, 'notify', {
+      await this.execChordRpc(this.successor, 'notify', {
         originator: this.address,
         role: 'predecessor',
       });
@@ -103,7 +103,11 @@ class Chord {
     return true;
   }
 
-  stabilize() { }
+  async stabilize() {
+    // Make sure both successor and predecessor are valid and alive
+    await this.execChordRpc(this.predecessor, 'ping', { originator: this.address });
+    await this.execChordRpc(this.successor, 'ping', { originator: this.address });
+  }
 
   async notify(host) { console.log('notified...'); }
 
