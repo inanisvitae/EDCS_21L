@@ -2,6 +2,10 @@ import _ from 'underscore';
 import ip from 'ip';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
+import {
+  HEAD,
+  TAIL,
+} from '../constants';
 import iChords from '../interfaces/iChord';
 import {
   isAddress,
@@ -28,8 +32,8 @@ class Chord {
     this.localhost = '0.0.0.0:50051';
     this.address = `${ip.address()}:50051`;
     this.id = sha1(this.address);
-    this.predecessor = 'HEAD';
-    this.successor = 'TAIL';
+    this.predecessor = HEAD;
+    this.successor = TAIL;
     this.isJoined = false;
     this.execChordRpc = execChordRpc;
     this.start();
@@ -124,8 +128,18 @@ class Chord {
 
   async stabilize() {
     // Make sure both successor and predecessor are valid and alive
-    await this.execChordRpc(this.predecessor, 'ping', { originator: this.address });
-    await this.execChordRpc(this.successor, 'ping', { originator: this.address });
+    try {
+      await this.execChordRpc(this.predecessor, 'ping', { originator: this.address });
+    } catch (e) {
+      console.log(`Tried pinging ${this.predecessor} failed, so set predecessor to HEAD`);
+      this.predecessor = HEAD;
+    }
+    try {
+      await this.execChordRpc(this.successor, 'ping', { originator: this.address });
+    } catch (e) {
+      console.log(`Tried pinging ${this.successor} failed, so set predecessor to TAIL`);
+      this.successor = TAIL;
+    }
   }
 
   async notify(host) { console.log('notified...'); }

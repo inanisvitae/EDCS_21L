@@ -1,16 +1,19 @@
 import {
   isAddress,
-  isLocatedBetween,
   sha1,
   fromStringToDecimal,
 } from '../utils/utils';
+import {
+  HEAD,
+  TAIL,
+} from '../constants';
 
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { name: id } = call.request;
   const thisId = this.id;
   if (fromStringToDecimal(thisId) > fromStringToDecimal(id)) {
-    if (this.predecessor === 'HEAD') {
+    if (this.predecessor === HEAD) {
       // Means it's at the beginning of the linked list but the hash value is still smaller
       return callback(null, { successor: this.address });
     }
@@ -24,7 +27,7 @@ async function lookup(call, callback) {
       console.log(`Error in forward routing is ${JSON.stringify(e)}`);
     }
   } else if (fromStringToDecimal(thisId) < fromStringToDecimal(id)) {
-    if (this.successor === 'TAIL') {
+    if (this.successor === TAIL) {
       // Means it's at the end of the linked list but the hash value is still bigger
       return callback(null, { predecessor: this.address });
     }
