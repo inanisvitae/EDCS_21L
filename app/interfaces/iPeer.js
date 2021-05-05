@@ -22,7 +22,7 @@ function partition(call, callback) {
 
 }
 
-export {
+export default {
   get,
   set,
   del,
