@@ -52,8 +52,8 @@ class Peer extends Chord {
         this.collection.set(key, value);
         return true;
       }
-      const response = await this.execPeerRpc(host, 'set', { key, value });
-      return response.value;
+      await this.execPeerRpc(host, 'set', { key, value });
+      return true;
     } catch (e) {
       console.log('Unable to set key due to error');
       throw e;
@@ -67,8 +67,8 @@ class Peer extends Chord {
       if (host === this.address) {
         return this.collection.del(key);
       }
-      const response = await this.execPeerRpc(host, 'del', { key });
-      return response.value;
+      await this.execPeerRpc(host, 'del', { key });
+      return true;
     } catch (e) {
       console.log('Unable to delete key due to error');
       throw e;

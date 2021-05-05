@@ -12,13 +12,13 @@ function get(call, callback) {
 function set(call, callback) {
   const { key, value } = call.request;
   this.collection.set(key, value);
-  return callback(null, {});
+  return callback(null, { });
 }
 
 function del(call, callback) {
   const { key } = call.request;
   this.collection.del(key);
-  return callback(null);
+  return callback(null, { });
 }
 
 function partition(call, callback) {
