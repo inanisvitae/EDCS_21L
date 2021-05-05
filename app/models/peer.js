@@ -83,10 +83,10 @@ class Peer extends Chord {
     let resultSuccessor = '{}';
     let resultPredecessor = '{}';
     if (this.successor !== TAIL) {
-      resultSuccessor = await this.execPeerRpc(this.successor, 'dump', JSON.stringify({ entries: '{}' }));
+      resultSuccessor = (await this.execPeerRpc(this.successor, 'dump', { entries: '{}' })).entries;
     }
     if (this.predecessor !== HEAD) {
-      resultPredecessor = await this.execPeerRpc(this.predecessor, 'dump', JSON.stringify({ entries: resultSuccessor }));
+      resultPredecessor = (await this.execPeerRpc(this.predecessor, 'dump', { entries: resultSuccessor })).entries;
     }
     const result = JSON.parse(resultPredecessor);
     result[this.address] = _.pairs(this.collection.data);
