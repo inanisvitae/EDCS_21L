@@ -53,6 +53,11 @@ function partition(call, callback) {
   return callback(null, { entries: JSON.stringify(entries) });
 }
 
+/**
+ * Will be invoked when another peer executes rpc on dump
+ * @param {*} call
+ * @param {*} callback
+ */
 async function dump(call, callback) {
   let entries = JSON.parse(call.request.entries);
   if (!(this.address in entries)) {

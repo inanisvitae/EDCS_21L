@@ -8,6 +8,14 @@ import {
   TAIL,
 } from '../constants';
 
+/**
+ * IMPORTANT: next node in the linked list always has a higher hash value than the previous
+ * node. When a node joins the network or a key is looked up, sha1 will be calculated to
+ * determine whether it should be in the successor or in the other nodes.
+ * @param call
+ * @param callback
+ * @returns
+ */
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { name: id } = call.request;
@@ -48,7 +56,13 @@ async function lookup(call, callback) {
   // If it's the same id, just send successor because successor is always preferred
   return callback(null, { successor: this.address });
 }
-
+/**
+ * Notifies the node whether it should be the successor or predecessor of the originator node
+ * role can either be successor or predecessor.
+ * @param {*} call
+ * @param {*} callback
+ * @returns
+ */
 async function notify(call, callback) {
   console.log(`Invoked notify with request ${JSON.stringify(call.request)}`);
   const { originator, role } = call.request;

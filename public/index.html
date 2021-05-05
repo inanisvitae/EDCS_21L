@@ -1,18 +1,23 @@
 <html>
 <head>
-    <title>Sending Static Files with Express</title>
+    <title>Distributed Key Value System</title>
+    <link href="bootstrap-5.0.0-dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-        
-    key input: <input id="key" />
-    value input: <input id="value" />
-    <button onclick="set()">Set</button>
-    <button onclick="get()">Get</button>
-    <button onclick="del()">Delete</button>
-    <button onclick="showAll()">Show All</button>
-    network IP: <input id="host"/>
-    <button onclick="join()">Join</button>
-    <button onclick="info()">Info</button>
+    <div class="container">
+        <div class="mb-3">
+            <input id="key" class="form-control" placeholder="Key"/>
+            <input id="value" class="form-control" placeholder="Value"/>
+            <button onclick="set()" class="btn btn-primary">Set</button>
+            <button onclick="get()" class="btn btn-primary">Get</button>
+            <button onclick="del()" class="btn btn-primary">Delete</button>
+            <button onclick="showAll()" class="btn btn-primary">Show All</button>
+            <input id="host" class="form-control" placeholder="Network IP"/>
+            <button onclick="join()" class="btn btn-primary">Join</button>
+            <button onclick="info()" class="btn btn-primary">Info</button>
+            <textarea class="form-control rounded-0" placeholder="Log" id="log"></textarea>
+        </div>
+    </div>
     <script src="jquery.min.js"></script>
     <script src="app.js"></script>
 </body>

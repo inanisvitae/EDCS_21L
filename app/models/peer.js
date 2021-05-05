@@ -94,6 +94,11 @@ class Peer extends Chord {
     }
   }
 
+  /**
+   * @param host: host ip
+   * Sends partition request to target host to obtain data that should be on this peer, because
+   * distributed system also acts as a load balancer in this case.
+   */
   async partition(host) {
     if (!isAddress(host)) { return false; }
     console.log(`Partitioned keys on ${host}`);
@@ -109,6 +114,10 @@ class Peer extends Chord {
     return true;
   }
 
+  /**
+   * Obtains all key value pairs from all peers in the current network. Dump is the method to get 
+   * all data from collection.
+   */
   async showAll() {
     // Right now shows only the data on the node
     console.log(_.pairs(this.collection.data));

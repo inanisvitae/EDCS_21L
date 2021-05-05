@@ -80,6 +80,11 @@ class Chord {
     return successor;
   }
 
+  /**
+   * This method is invoked when user clicks join button on the interface. It looks up
+   * the address of this peer in the network. After the peer is found, it then starts joining
+   * @param host: host ip address
+   */
   async join(host) {
     console.log('joining...');
     if (this.isJoined) { return false; }
@@ -133,6 +138,10 @@ class Chord {
     return this.predecessor !== HEAD || this.successor !== TAIL;
   }
 
+  /**
+   * Simply pings both predecessor and successor incessantly to make sure that both are alive,
+   * because either one is down, the linked list is broken.
+   */
   async stabilize() {
     console.log('Make sure it starts...');
     // Make sure both successor and predecessor are valid and alive
@@ -156,6 +165,10 @@ class Chord {
     this.isJoined = this.testIsJoined();
   }
 
+  /**
+   * Requests info about predecessor and successor from the target host
+   * @param {*} host: host ip address
+   */
   async info(host) {
     if (!isAddress(host)) {
       throw new Error('Host is not an IPv4 address.');

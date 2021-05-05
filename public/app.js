@@ -61,6 +61,7 @@ var showAll = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      $("#log").val(JSON.stringify(data.result));
     },
     data: JSON.stringify({  })
   });
