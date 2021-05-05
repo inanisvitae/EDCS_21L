@@ -12,12 +12,16 @@ async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { name: id } = call.request;
   const thisId = this.id;
+  console.log(fromStringToDecimal(thisId),
+    fromStringToDecimal(id),
+    fromStringToDecimal(sha1(this.predecessor)));
   if (fromStringToDecimal(thisId) > fromStringToDecimal(id)) {
     if (this.predecessor === HEAD) {
       // Means it's at the beginning of the linked list but the hash value is still smaller
       return callback(null, { successor: this.address });
     }
-    if (sha1(this.predecessor) >= fromStringToDecimal(id)) {
+    if (fromStringToDecimal(sha1(this.predecessor)) >= fromStringToDecimal(id)) {
+      console.log('is true');
       try {
         const response = await this.execChordRpc(this.predecessor, 'lookup', { name: id });
         return callback(null, response);
@@ -32,7 +36,7 @@ async function lookup(call, callback) {
       // Means it's at the end of the linked list but the hash value is still bigger
       return callback(null, { predecessor: this.address });
     }
-    if (sha1(this.successor) <= fromStringToDecimal(id)) {
+    if (fromStringToDecimal(sha1(this.successor)) <= fromStringToDecimal(id)) {
       try {
         const response = await this.execChordRpc(this.successor, 'lookup', { name: id });
         return callback(null, response);
