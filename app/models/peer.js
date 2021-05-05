@@ -32,6 +32,9 @@ class Peer extends Chord {
     const id = sha1(key);
     try {
       const host = await this.lookup(id);
+      if (host === this.address) {
+        return this.collection.get(key);
+      }
       const response = await this.execPeerRpc(host, 'get', { key });
       return response.value;
     } catch (e) {
@@ -44,6 +47,10 @@ class Peer extends Chord {
     const id = sha1(key);
     try {
       const host = await this.lookup(id);
+      if (host === this.address) {
+        this.collection.set(key, value);
+        return true;
+      }
       const response = await this.execPeerRpc(host, 'set', { key, value });
       return response.value;
     } catch (e) {
@@ -56,6 +63,9 @@ class Peer extends Chord {
     const id = sha1(key);
     try {
       const host = await this.lookup(id);
+      if (host === this.address) {
+        return this.collection.del(key);
+      }
       const response = await this.execPeerRpc(host, 'del', { key });
       return response.value;
     } catch (e) {
@@ -65,6 +75,12 @@ class Peer extends Chord {
   }
 
   async partition(host) { console.log('Partitioned keys'); return 1; }
+
+  showAll() {
+    // Right now shows only the data on the node
+    console.log(_.pairs(this.collection.data));
+    return _.pairs(this.collection.data);
+  }
 }
 
 export default Peer;

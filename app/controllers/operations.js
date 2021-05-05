@@ -31,7 +31,11 @@ const del = wrap(async (req, res) => {
 });
 
 const showAll = wrap(async (req, res) => {
-  res.json({ status: 'success' });
+  const result = peer.showAll();
+  if (result) {
+    return res.json({ status: 'success', result });
+  }
+  return res.sendStatus(400);
 });
 
 const join = wrap(async (req, res) => {
