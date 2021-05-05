@@ -98,7 +98,11 @@ class Peer extends Chord {
     if (!isAddress(host)) { return false; }
     console.log(`Partitioned keys on ${host}`);
     const result = JSON.parse((await this.execPeerRpc(host, 'partition', { originator: this.address })).entries || '[]');
-    result.forEach(([key, value]) => {
+    result.forEach((en) => {
+      const {
+        key,
+        value,
+      } = en;
       // TODO: Should test whether the key pair already exists
       this.collection.set(key, value);
     });

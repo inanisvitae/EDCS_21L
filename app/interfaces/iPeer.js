@@ -33,7 +33,7 @@ function partition(call, callback) {
       && keyId < fromStringToDecimal(this.id)) {
       entries.push({
         key,
-        value: this.collection[key],
+        value: this.collection.get(key),
       });
 
       this.collection.del(key);
@@ -44,7 +44,7 @@ function partition(call, callback) {
       && keyId > fromStringToDecimal(this.id)) {
       entries.push({
         key,
-        value: this.collection[key],
+        value: this.collection.get(key),
       });
 
       this.collection.del(key);
