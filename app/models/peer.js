@@ -90,7 +90,7 @@ class Peer extends Chord {
     }
     const result = JSON.parse(resultPredecessor);
     result[this.address] = _.pairs(this.collection.data);
-    console.log(`Show all result is: ${result}`);
+    console.log(`Show all result is: ${JSON.stringify(result)}`);
     return result;
   }
 }

@@ -27,6 +27,13 @@ class Collection {
     }
     return 0;
   }
+
+  has(key) {
+    if (isClean(key) && (key in this.data)) {
+      return 1;
+    }
+    return 0;
+  }
 }
 
 export default Collection;
