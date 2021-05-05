@@ -8,59 +8,55 @@ import {
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
   const { name: id } = call.request;
-  if (!this.successor) {
-    console.log('This is a singleton node');
+  const thisId = this.id;
+  if (fromStringToDecimal(thisId) > fromStringToDecimal(id)) {
+    if (this.predecessor === 'HEAD') {
+      // Means it's at the beginning of the linked list but the hash value is still smaller
+      return callback(null, { successor: this.address });
+    }
+    if (sha1(this.predecessor) > fromStringToDecimal(id)) {
+      return callback(null, { successor: this.address, predecessor: this.predecessor });
+    }
+    try {
+      const response = await this.execChordRpc(this.predecessor, 'lookup', { name: id });
+      return callback(null, response);
+    } catch (e) {
+      console.log(`Error in forward routing is ${JSON.stringify(e)}`);
+    }
+  } else if (fromStringToDecimal(thisId) < fromStringToDecimal(id)) {
+    if (this.successor === 'TAIL') {
+      // Means it's at the end of the linked list but the hash value is still bigger
+      return callback(null, { predecessor: this.address });
+    }
+    if (sha1(this.successor) > fromStringToDecimal(id)) {
+      return callback(null, { successor: this.successor, predecessor: this.address });
+    }
+    try {
+      const response = await this.execChordRpc(this.successor, 'lookup', { name: id });
+      return callback(null, response);
+    } catch (e) {
+      console.log(`Error in backward routing is ${JSON.stringify(e)}`);
+    }
+  } else {
+    // If it's the same id, just send successor because successor is always preferred
+    return callback(null, { successor: this.address });
   }
-  const successorShaId = sha1(this.successor);
 
-  if (isLocatedBetween(
-    fromStringToDecimal(this.id),
-    fromStringToDecimal(id),
-    fromStringToDecimal(successorShaId),
-  )
-  || id === successorShaId) {
-    await this.execChordRpc(this.successor, 'ping', { originator: this.address });
-    return callback(null, { successor: this.successor });
-  }
-  // Recursively get the correct successor of key
-  try {
-    const response = await this.execChordRpc(this.successor, 'lookup', { name: id });
-    return callback(null, response);
-  } catch (e) {
-    console.log('The successor is no longer active');
-  }
   return callback(null, new Error());
 }
 
 async function notify(call, callback) {
   console.log(`Invoked notify with request ${JSON.stringify(call.request)}`);
-  const { originator } = call.request;
+  const { originator, role } = call.request;
   if (!isAddress(originator)) {
     return callback(new Error());
   }
 
-  if (!isAddress(this.predecessor)
-  // Arrange linked list in ascending order clockwise
-  || isLocatedBetween(
-    fromStringToDecimal(sha1(this.predecessor)),
-    fromStringToDecimal(sha1(originator)),
-    fromStringToDecimal(this.id),
-  )) {
+  if (role === 'predecessor') {
     this.predecessor = originator;
-    if (this.successor === this.address) {
-      // Means that this node was a singleton before the join
-      this.successor = originator;
-    }
-  } else {
-    try {
-      await this.execChordRpc(this.predecessor, 'ping', {
-        originator: this.address,
-      });
-      console.log('Successfully invoked ping');
-    } catch (e) {
-      this.predecessor = originator;
-      console.log(`Error, but updated predecessor to ${this.predecessor}`);
-    }
+  }
+  if (role === 'successor') {
+    this.successor = originator;
   }
 
   return callback(null);

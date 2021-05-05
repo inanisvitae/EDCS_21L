@@ -11,6 +11,7 @@ service CHORD_PROTO {
 
 message notifyRequest {
   string originator = 1;
+  string role = 2;
 }
 
 message notifyResponse {
@@ -30,7 +31,8 @@ message lookupRequest {
 }
 
 message lookupResponse {
-  string successor = 1;
+  string predecessor = 1;
+  string successor = 2;
 }
 
 message infoRequest {

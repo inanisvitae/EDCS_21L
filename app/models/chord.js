@@ -28,8 +28,8 @@ class Chord {
     this.localhost = '0.0.0.0:50051';
     this.address = `${ip.address()}:50051`;
     this.id = sha1(this.address);
-    this.predecessor = this.address;
-    this.successor = this.address;
+    this.predecessor = 'HEAD';
+    this.successor = 'TAIL';
     this.isJoined = false;
     this.execChordRpc = execChordRpc;
     this.start();
@@ -74,26 +74,27 @@ class Chord {
     });
     console.log('finished lookup..');
     console.log(`Lookup response is: ${JSON.stringify(lookupResponse)}`);
-    const newSuccessor = lookupResponse.successor;
-    if (!isAddress(newSuccessor)) {
-      throw new Error('Failed to find successor');
+    const {
+      predecessor: newPredecessor,
+      successor: newSuccessor,
+    } = lookupResponse;
+    if (!isAddress(newSuccessor) && !isAddress(newPredecessor)) {
+      throw new Error('Failed to find any joinable node');
     }
-    this.successor = newSuccessor;
-    const infoResponse = await execChordRpc(newSuccessor, 'info', { });
-    console.log(`Response from info is: ${JSON.stringify(infoResponse)}`);
-    // set predecessor address
-    const newPredecessor = infoResponse.predecessor;
-    if (!isAddress(newPredecessor)) {
-      throw new Error('Failed to find predecessor');
+    if (isAddress(newSuccessor)) {
+      this.successor = newSuccessor;
     }
-
-    // added to linked list
-    this.predecessor = newPredecessor;
-
-    // Notifies the successor that a new node has joined the network
+    if (isAddress(newPredecessor)) {
+      this.predecessor = newPredecessor;
+    }
     try {
+      await execChordRpc(this.predecessor, 'notify', {
+        originator: this.address,
+        role: 'successor',
+      });
       await execChordRpc(this.successor, 'notify', {
         originator: this.address,
+        role: 'predecessor',
       });
     } catch (e) {
       console.log(`Notify error: ${JSON.stringify(e)}`);
