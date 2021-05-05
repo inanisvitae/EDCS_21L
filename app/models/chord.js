@@ -148,15 +148,13 @@ class Chord {
       try {
         await this.execChordRpc(this.successor, 'ping', { originator: this.address });
       } catch (e) {
-        console.log(`Tried pinging ${this.successor} failed, so set predecessor to TAIL`);
+        console.log(`Tried pinging ${this.successor} failed, so set successor to TAIL`);
         this.successor = TAIL;
       }
     }
     // Updates is joined status
     this.isJoined = this.testIsJoined();
   }
-
-  async notify(host) { console.log('notified...'); }
 
   async info(host) {
     if (!isAddress(host)) {
