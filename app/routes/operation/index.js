@@ -7,4 +7,5 @@ export default (router) => {
   router.post('/showAll', operationController.showAll);
   router.post('/join', operationController.join);
   router.post('/info', operationController.info);
+  router.post('/ping', operationController.ping);
 };

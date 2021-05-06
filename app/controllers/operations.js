@@ -65,6 +65,11 @@ const info = wrap(async (req, res) => {
   }
 });
 
+const ping = wrap(async (req, res) => {
+  console.log('Interface pinging invoked');
+  return res.json({ status: 'success' });
+});
+
 export default {
   get,
   set,
@@ -72,4 +77,5 @@ export default {
   showAll,
   join,
   info,
+  ping,
 };
