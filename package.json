@@ -6,7 +6,9 @@
   "author": "ZIQI HONG <hongzq78@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node dist/index.js",
+    "start:prod": "NODE_ENV=prod node dist/index.js",
+    "start:server": "NODE_ENV=dev SYS=server node dist/index.js",
+    "start:desktop": "NODE_ENV=dev SYS=desktop node dist/index.js",
     "build": "gulp clean && gulp make && gulp copy"
   },
   "dependencies": {

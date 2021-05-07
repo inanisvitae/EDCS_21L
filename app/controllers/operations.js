@@ -1,9 +1,9 @@
 import wrap from '../utils/asyncWrapper';
-import Peer from '../models/peer';
+// import Peer from '../models/peer';
 
-const peer = new Peer();
+// const peer = new Peer();
 
-const get = wrap(async (req, res) => {
+const get = (peer) => wrap(async (req, res) => {
   const { key } = req.body;
   const result = await peer.get(key);
   if (result) {
@@ -12,7 +12,7 @@ const get = wrap(async (req, res) => {
   return res.sendStatus(400);
 });
 
-const set = wrap(async (req, res) => {
+const set = (peer) => wrap(async (req, res) => {
   const { key, value } = req.body;
   const result = await peer.set(key, value);
   if (result) {
@@ -21,7 +21,7 @@ const set = wrap(async (req, res) => {
   return res.sendStatus(400);
 });
 
-const del = wrap(async (req, res) => {
+const del = (peer) => wrap(async (req, res) => {
   const { key } = req.body;
   const result = await peer.set(key);
   if (result) {
@@ -30,7 +30,7 @@ const del = wrap(async (req, res) => {
   return res.sendStatus(400);
 });
 
-const showAll = wrap(async (req, res) => {
+const showAll = (peer) => wrap(async (req, res) => {
   const result = await peer.showAll();
   if (result) {
     return res.json({ status: 'success', result });
@@ -38,7 +38,7 @@ const showAll = wrap(async (req, res) => {
   return res.sendStatus(400);
 });
 
-const join = wrap(async (req, res) => {
+const join = (peer) => wrap(async (req, res) => {
   const { host } = req.body;
   try {
     const result = await peer.join(host);
@@ -52,7 +52,7 @@ const join = wrap(async (req, res) => {
   }
 });
 
-const info = wrap(async (req, res) => {
+const info = (peer) => wrap(async (req, res) => {
   const { host } = req.body;
   try {
     const result = await peer.info(host);
@@ -65,7 +65,7 @@ const info = wrap(async (req, res) => {
   }
 });
 
-const ping = wrap(async (req, res) => {
+const ping = (peer) => wrap(async (req, res) => {
   console.log('Interface pinging invoked');
   return res.json({ status: 'success' });
 });

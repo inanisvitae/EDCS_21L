@@ -30,7 +30,16 @@ class Chord {
     console.log('Initialized Chord object');
     console.log(`IP is ${ip.address()}`);
     this.localhost = '0.0.0.0:50051';
-    this.address = `${ip.address()}:50051`;
+    if (process.env.NODE_ENV === 'dev') {
+      // Only when project is launched on desktop needs manual IP input, because ip module doesn't
+      // fetch correct external IP address
+      if (process.env.SYS === 'desktop') {
+        this.address = process.env.ADDR;
+      }
+    } else {
+      this.address = `${ip.address()}:50051`;
+    }
+    console.log(this.address);
     this.id = sha1(this.address);
     this.predecessor = HEAD;
     this.successor = TAIL;

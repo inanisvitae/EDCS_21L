@@ -18,6 +18,10 @@ import {
  */
 async function lookup(call, callback) {
   console.log(`Invoked Lookup with request ${JSON.stringify(call.request)}`);
+  if (this.predecessor === HEAD && this.successor === TAIL) {
+    console.log('Both head and tail are not connected to any peers');
+    return callback(null, { successor: this.address });
+  }
   const { name: id } = call.request;
   const thisId = this.id;
   console.log(fromStringToDecimal(thisId),
