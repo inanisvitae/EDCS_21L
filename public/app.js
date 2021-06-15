@@ -63,6 +63,10 @@ var showAll = function() {
       console.log(data);
       $("#log").val(JSON.stringify(data.result));
     },
+    error: function(xhr, status, error){
+      var errorMessage = 'Error to show all key value pairs';
+      alert('Error - ' + errorMessage);
+    },
     data: JSON.stringify({  })
   });
 };
@@ -76,6 +80,11 @@ var join = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      alert('Success');
+    },
+    error: function(xhr, status, error){
+      var errorMessage = 'Please enter valid network IP to join';
+      alert('Error - ' + errorMessage);
     },
     data: JSON.stringify({ host: $('#host').val() })
   });
@@ -90,6 +99,11 @@ var info = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      $("#log").val(JSON.stringify(data.result));
+    },
+    error: function(xhr, status, error){
+      var errorMessage = 'Please enter valid network IP to show info';
+      alert('Error - ' + errorMessage);
     },
     data: JSON.stringify({ host: $('#host').val() })
   });
