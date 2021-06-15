@@ -59,6 +59,7 @@ function partition(call, callback) {
  * @param {*} callback
  */
 async function dump(call, callback) {
+  console.log('here2...');
   let entries = JSON.parse(call.request.entries);
   if (!(this.address in entries)) {
     entries[this.address] = _.pairs(this.collection.data);
@@ -71,6 +72,7 @@ async function dump(call, callback) {
     const result = JSON.parse((await this.execPeerRpc(this.successor, 'dump', { entries: JSON.stringify(entries) })).entries);
     entries = { ...result, ...entries };
   }
+  console.log(entries);
   return callback(null, { entries: JSON.stringify(entries) });
 }
 

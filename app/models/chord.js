@@ -152,7 +152,7 @@ class Chord {
    * because either one is down, the linked list is broken.
    */
   async stabilize() {
-    console.log('Make sure it starts...');
+    // console.log('Make sure it starts...');
     // Make sure both successor and predecessor are valid and alive
     if (this.predecessor !== HEAD) {
       try {
