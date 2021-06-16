@@ -23,7 +23,7 @@ const set = (peer) => wrap(async (req, res) => {
 
 const del = (peer) => wrap(async (req, res) => {
   const { key } = req.body;
-  const result = await peer.set(key);
+  const result = await peer.del(key);
   if (result) {
     return res.json({ status: 'success' });
   }

@@ -19,6 +19,7 @@ var set = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      alert('Success');
     },
     data: JSON.stringify({ key: $('#key').val(), value: $('#value').val() })
   });
@@ -33,6 +34,7 @@ var get = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      $("#log").val('Value result is: ' + JSON.stringify(data.result));
     },
     data: JSON.stringify({ key: $('#key').val() })
   });
@@ -47,6 +49,7 @@ var del = function() {
     contentType: 'application/json',
     success: function (data) {
       console.log(data);
+      alert('Success');
     },
     data: JSON.stringify({ key: $('#key').val() })
   });

@@ -18,6 +18,9 @@ function set(call, callback) {
 
 function del(call, callback) {
   const { key } = call.request;
+  console.log(key);
+  console.log('debug2..');
+  console.log(this.collection);
   this.collection.del(key);
   return callback(null, { });
 }
