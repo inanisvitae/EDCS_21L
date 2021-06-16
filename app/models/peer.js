@@ -1,4 +1,6 @@
 import _ from 'underscore';
+import Promise from 'bluebird';
+let fs = Promise.promisifyAll(require('fs'));
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import Chord from './chord';
@@ -24,6 +26,15 @@ class Peer extends Chord {
     super();
     console.log('Initialized Peer object');
     this.collection = new Collection();
+    // Should see if there is data in localstorage
+    fs.readFileAsync('data.json').then((readResult) => {
+      const data = JSON.parse(readResult);
+      _.keys(data).forEach((key) => {
+        this.collection.set(key, data[key]);
+      });
+    }).catch((e) => {
+      console.log('There is no data to read from');
+    });
     this.server.addService(peerProto.PEER_PROTO.service,
       _.mapObject(iPeers, (iPeer) => iPeer.bind(this)));
     this.execPeerRpc = execPeerRpc;
@@ -33,6 +44,7 @@ class Peer extends Chord {
         start: () => {
           stopTime = setInterval(() => {
             this.stabilize();
+            this.syncToStorage();
             if (this.isJoined) {
               this.partition(this.predecessor);
               this.partition(this.successor);
@@ -46,6 +58,11 @@ class Peer extends Chord {
       };
     })();
     this.maintenance.start();
+  }
+
+  async syncToStorage() {
+    const collectionData = JSON.stringify(this.collection.data);
+    await fs.writeFileAsync('data.json', collectionData);
   }
 
   async get(key) {
